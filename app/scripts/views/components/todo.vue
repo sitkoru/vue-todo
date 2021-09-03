@@ -9,24 +9,25 @@
         </div>
 
         <ui-list-divider ></ui-list-divider>
-      
-        <ui-fab v-if="checkedValues.length > 0" class="btn-remove tooltip" raised @click="removeTask(checkedValues)">
-          <span class="tooltiptext">Удалить</span>
-          <ui-image-item :image="'/scripts/assets/delete.png'" class="img-dialog">
-          </ui-image-item>
-        </ui-fab>
 
+        <p v-bind:class="[themeMode ? 'not-faund-text-black' : 'not-faund-text']" v-if="tasks.length == 0">Задачи отсутствуют</p>
+      
         <ul>
           <li v-for="task in tasks" v-bind:class="[themeMode ? 'list-el-black' : 'list-el']">
             <h3 v-bind:class="[themeMode ? 'h3-black' : 'h3-light']">{{task.name}}</h3>
             <ui-item-last-content>
+              <ui-fab class="btn-remove tooltip" raised @click="removeTask(task.id)">
+                <span class="tooltiptext">Удалить</span>
+                <ui-image-item  :image="'/scripts/assets/delete.png'" class="img-dialog">
+                </ui-image-item>
+              </ui-fab>
                <ui-fab @click="editTask(task)" v-bind:class="[themeMode ? 'btn-change-black tooltip' : 'btn-change tooltip']" raised >
                 <span class="tooltiptext">Изменить</span>
-                <ui-image-item style="width: 70%" :image="'/scripts/assets/edit.png'" class="img-dialog">
+                <ui-image-item :image="'/scripts/assets/edit.png'" class="img-dialog">
                 </ui-image-item>
               </ui-fab>
               <ui-checkbox 
-                v-model="checkedValues"
+                v-model="task.checked"
                 :value="task.id"
                 @click.stop
               ></ui-checkbox>
@@ -72,15 +73,15 @@ import {Options, Vue} from "vue-class-component";
 export default class ToDo extends Vue {
   logo = 'Just do it';
   tasks = [
-    { "id": 0, "name": "Пойти" },
-    { "id": 1, "name": "Прийти" }
+    { "id": 0, "name": "Пойти", "checked": true },
+    { "id": 1, "name": "Прийти", "checked": false }
   ];
   inputTask = "";
   inputEditTask = [];
   openEaster = false;
   openEdit = false;
   imgEaster = "/scripts/assets/just1.gif";
-  themeModeIcon = "/scripts/assets/boy-dark.png";
+  themeModeIcon = "/scripts/assets/theme_dark.png";
   themeMode = false;
   checkedValues = [];
 
@@ -95,14 +96,11 @@ export default class ToDo extends Vue {
     }
   }
 
-  removeTask(checkedValues){
+  removeTask(taskId){
     for (let i = 0; i < this.tasks.length; i++) {
-      for (let j = 0; j < checkedValues.length; j++) {
-          if(this.tasks[i].id == checkedValues[j]){
-            this.tasks.splice(i, 1);
-          }
+      if(this.tasks[i].id == taskId){
+        this.tasks.splice(i, 1);
       }
-      this.checkedValues = [];
     }
   }
 
@@ -127,11 +125,11 @@ export default class ToDo extends Vue {
     if(themeMode){
       document.body.style.background = "white";
       this.themeMode = false;
-      this.themeModeIcon = "/scripts/assets/boy-dark.png";
+      this.themeModeIcon = "/scripts/assets/theme_dark.png";
     }else if(!themeMode){
       document.body.style.background = "#111"; 
       this.themeMode = true;
-      this.themeModeIcon = "/scripts/assets/boy-light.png";
+      this.themeModeIcon = "/scripts/assets/theme_light.png";
     }
   }
 }
@@ -179,9 +177,7 @@ export default class ToDo extends Vue {
 
 .btn-remove{
   background-color: red;
-  position: absolute; 
-  right: 23px;
-  margin-top: 99px;
+  margin-right: 15px;
   color: white;
   width: 35px;
   height: 35px;
@@ -282,10 +278,6 @@ li {
   list-style-type: none; /* Убираем маркеры */
 }
 
-ul{
- margin-top:55px;
-}
-
 /* Tooltip*/
 .tooltip .tooltiptext {
     visibility: hidden;
@@ -319,5 +311,17 @@ ul{
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+.not-faund-text{
+  color: gray;
+  margin-top: 26px;
+  margin-bottom: 9px;
+}
+
+.not-faund-text-black{
+  color: white;
+  margin-top: 26px;
+  margin-bottom: 9px;
 }
 </style>
