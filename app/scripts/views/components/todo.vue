@@ -65,6 +65,8 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
+import {GreeterClient} from "../../../grpc/greet_grpc_web_pb";
+import {HelloRequest} from "../../../grpc/greet_pb";
 
 @Options({
   name: 'todo'
@@ -84,6 +86,7 @@ export default class ToDo extends Vue {
   themeModeIcon = "/scripts/assets/theme_dark.png";
   themeMode = false;
   checkedValues = [];
+  client = new GreeterClient("https://localhost:5001");
 
   addTask(task){
     if(task){
@@ -93,6 +96,17 @@ export default class ToDo extends Vue {
         };
       this.tasks.push(taskObj);
       this.inputTask = "";
+
+      let request = new HelloRequest();
+      request.setName(task);
+      var response = this.client.sayHello(request, null, function(err, response) {
+        if (err) {
+          console.log(err.code);
+          console.log(err.message);
+        } else {
+          console.log(response.getMessage());
+        }
+      });
     }
   }
 
