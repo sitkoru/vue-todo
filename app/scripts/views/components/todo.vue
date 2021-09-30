@@ -65,8 +65,8 @@
 
 <script lang="ts">
 import {Options, Vue} from "vue-class-component";
-import {GreeterClient} from "../../../grpc/greet_grpc_web_pb";
-import {HelloRequest} from "../../../grpc/greet_pb";
+import {JustDoItClient} from "../../../grpc/JustdoitServiceClientPb";
+import {TaskName} from "../../../grpc/justdoit_pb";
 
 @Options({
   name: 'todo'
@@ -86,25 +86,27 @@ export default class ToDo extends Vue {
   themeModeIcon = "/scripts/assets/theme_dark.png";
   themeMode = false;
   checkedValues = [];
-  client = new GreeterClient("https://localhost:5001");
+  client = new JustDoItClient("https://localhost:5001");
 
   addTask(task){
     if(task){
       var taskObj = {
         "id": Math.random().toString(36).substr(2, 9), 
-        "name": task
+        "name": task,
+        "checked": false
         };
       this.tasks.push(taskObj);
       this.inputTask = "";
 
-      let request = new HelloRequest();
-      request.setName(task);
-      var response = this.client.sayHello(request, null, function(err, response) {
+      let taskName = new TaskName();
+      taskName.setName(task);
+      console.log(task);
+      var response = this.client.addIssue(taskName, null,function(err, response) {
         if (err) {
           console.log(err.code);
           console.log(err.message);
         } else {
-          console.log(response.getMessage());
+          console.log(response.getName());
         }
       });
     }
