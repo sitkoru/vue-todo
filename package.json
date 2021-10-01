@@ -1,37 +1,36 @@
 {
-  "name": "my-project",
-  "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "IgorAlymov <igor.alymov.97@mail.ru>",
+  "name": "todo",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "dev": "balm",
-    "prod": "balm -p",
-    "test": "jest"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "balm-ui": "^9.35.1",
-    "vue": "^3.2.4",
-    "vue-class-component": "^8.0.0-rc.1",
-    "vue-property-decorator": "^9.1.2"
+    "@mdi/font": "5.9.55",
+    "core-js": "^3.8.3",
+    "google-protobuf": "^3.18.0",
+    "grpc-web": "^1.2.1",
+    "roboto-fontface": "*",
+    "vue": "^3.2.6",
+    "vue-class-component": "^8.0.0-0",
+    "vuetify": "^3.0.0-alpha.11"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-proposal-decorators": "^7.14.5",
-    "@types/jest": "^26.0.0",
-    "@vue/compiler-sfc": "^3.0.0",
-    "@vue/test-utils": "^2.0.0-beta.14",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^26.6.3",
-    "balm": "^3.9.0",
-    "eslint": "^7.17.0",
-    "eslint-plugin-vue": "^7.4.0",
-    "jest": "^26.6.0",
-    "jest-serializer-vue": "^2.0.2",
-    "ts-jest": "^26.4.4",
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
+    "@vue/cli-plugin-babel": "~5.0.0-beta.4",
+    "@vue/cli-plugin-eslint": "~5.0.0-beta.4",
+    "@vue/cli-plugin-typescript": "~5.0.0-beta.4",
+    "@vue/cli-service": "~5.0.0-beta.4",
+    "@vue/compiler-sfc": "^3.2.6",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "eslint": "^7.20.0",
+    "eslint-plugin-vue": "^7.2.0",
+    "sass": "~1.33.0",
+    "sass-loader": "^10.0.0",
     "typescript": "~4.1.5",
-    "vue-jest": "^5.0.0-alpha.7",
-    "vue-loader": "^16.0.0",
-    "webpack": "4"
-  },
-  "private": true
+    "vue-cli-plugin-vuetify": "~2.4.2"
+  }
 }
