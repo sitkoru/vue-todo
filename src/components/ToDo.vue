@@ -1,20 +1,29 @@
 <template>
   <v-container>
-    <v-row class="text-center">
-
-      <v-col class="mb-5" cols="12">
-        <h2 class="headline font-weight-bold mb-5">Just Do It</h2>
-
-        <v-row justify="center">
-          
-          <v-btn block @click="test()"> Добавить </v-btn>
-          
-        </v-row>
-      </v-col>
+    <v-card
+        class="mx-auto"
+        max-width="644"
+        outlined>
+      <v-row class="text-center">
+        <v-col class="mb-5" cols="12">
+          <h2 class="headline font-weight-bold mb-5" style="color: tomato;">Just Do It</h2>
+        </v-col>
+      </v-row>
       
-    </v-row>
+      <ul>
+        <li>Чебурашка</li>
+        <li>Крокодил Гена</li>
+        <li>Шапокляк</li>
+      </ul>
 
-    
+      <v-text-field label="Введите задачу..." v-model="newTask"></v-text-field>
+      
+      <v-btn style="background-color: tomato; color: white;"
+             block
+             @click="addTask(newTask)">
+        Добавить
+      </v-btn>
+    </v-card>
   </v-container>
 </template>
 
@@ -27,10 +36,12 @@ import { TaskName } from "../grpc/justdoit_pb";
 })
 export default class HelloWorld extends Vue {
   client = new JustDoItClient("https://localhost:5001");
+  newTask = "";
+  listTasks = [];
 
-  async test(): Promise<void> {
+  async addTask(newTask: string): Promise<void> {
     let taskName = new TaskName();
-    taskName.setName("bla");
+    taskName.setName(newTask);
     var response = await this.client.addIssue(taskName, null);
     console.log(response.getName());
   }
