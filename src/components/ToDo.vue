@@ -10,11 +10,11 @@
         </v-col>
       </v-row>
       
-      <ul>
-        <li>Чебурашка</li>
-        <li>Крокодил Гена</li>
-        <li>Шапокляк</li>
-      </ul>
+      <ol class="rounded">
+        <li v-for="task in listTasks" :key="task.id">
+          <a href="#">{{ task.name }}</a>
+        </li>
+      </ol>
 
       <v-text-field label="Введите задачу..." v-model="newTask"></v-text-field>
       
@@ -31,19 +31,22 @@
 import { Options, Vue } from "vue-class-component";
 import { JustDoItClient } from "../grpc/JustdoitServiceClientPb";
 import { TaskName } from "../grpc/justdoit_pb";
+
 @Options({
   name: "todo",
 })
+
 export default class HelloWorld extends Vue {
   client = new JustDoItClient("https://localhost:5001");
   newTask = "";
-  listTasks = [];
+  listTasks : any[] = [];
 
   async addTask(newTask: string): Promise<void> {
     let taskName = new TaskName();
     taskName.setName(newTask);
-    var response = await this.client.addIssue(taskName, null);
-    console.log(response.getName());
+    let response = await this.client.addIssue(taskName, null);
+    this.listTasks.push(response.toObject());
+    this.newTask = "";
   }
 }
 </script>
