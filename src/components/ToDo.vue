@@ -41,14 +41,14 @@
       <v-dialog v-model="dialogEdit">
         <v-card>
 
-          <v-text-field v-model="editTask"></v-text-field>
+          <v-text-field v-model="editTask.name"></v-text-field>
 
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
                 color="primary"
                 text
-                @click="dialogEdit = false"
+                @click="updateTask(editTask)"
             >
               Сохранить
             </v-btn>
@@ -71,7 +71,7 @@ import { TaskName } from "../grpc/justdoit_pb";
 export default class HelloWorld extends Vue {
   client = new JustDoItClient("https://localhost:5001");
   newTask = "";
-  editTask = "";
+  editTask : any;
   listTasks : any[] = [];
   dialogEdit = false;
 
@@ -87,7 +87,10 @@ export default class HelloWorld extends Vue {
     this.dialogEdit = true;
     this.listTasks.forEach((element) => {
       if(element.id == idTask)
-        this.editTask = element.name;
+        this.editTask = {
+          id : element.id,
+          name : element.name
+        };
     });
   }
 
@@ -97,6 +100,15 @@ export default class HelloWorld extends Vue {
 
   async checkTask(idTask: number){
     console.log(idTask);
+  }
+
+  async updateTask(task:any){
+    this.listTasks.forEach((element) => {
+      if(element.id == task.id)
+        element.name = task.name;
+      
+    });
+    this.dialogEdit = false;
   }
 }
 </script>
