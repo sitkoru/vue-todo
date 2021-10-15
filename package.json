@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "google-protobuf": "^3.18.0",
     "grpc-web": "^1.2.1",
+    "protoc-gen-grpc-web": "^1.2.1",
     "roboto-fontface": "*",
     "vue": "^3.2.6",
     "vue-class-component": "^8.0.0-0",

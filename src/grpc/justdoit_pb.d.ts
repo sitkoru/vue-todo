@@ -2,6 +2,42 @@ import * as jspb from 'google-protobuf'
 
 
 
+export class TaskId extends jspb.Message {
+  getId(): number;
+  setId(value: number): TaskId;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): TaskId.AsObject;
+  static toObject(includeInstance: boolean, msg: TaskId): TaskId.AsObject;
+  static serializeBinaryToWriter(message: TaskId, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): TaskId;
+  static deserializeBinaryFromReader(message: TaskId, reader: jspb.BinaryReader): TaskId;
+}
+
+export namespace TaskId {
+  export type AsObject = {
+    id: number,
+  }
+}
+
+export class Result extends jspb.Message {
+  getResult(): boolean;
+  setResult(value: boolean): Result;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Result.AsObject;
+  static toObject(includeInstance: boolean, msg: Result): Result.AsObject;
+  static serializeBinaryToWriter(message: Result, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Result;
+  static deserializeBinaryFromReader(message: Result, reader: jspb.BinaryReader): Result;
+}
+
+export namespace Result {
+  export type AsObject = {
+    result: boolean,
+  }
+}
+
 export class TaskName extends jspb.Message {
   getName(): string;
   setName(value: string): TaskName;

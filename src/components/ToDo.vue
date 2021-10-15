@@ -7,7 +7,7 @@
       <v-row class="text-center">
         <v-col class="mb-5" cols="12">
           <h2 class="headline font-weight-bold mb-5" style="color: tomato;">Just Do It</h2>
-          <v-btn class="remove"  v-on:click="removeTask()">
+          <v-btn class="remove"  v-on:click="removeTask(listTasks)">
             <v-icon dark style="color: tomato">
               mdi-delete
             </v-icon>
@@ -16,14 +16,14 @@
       </v-row>
       
       <ol class="rounded">
-        <li v-for="task in listTasks" :key="task.id">
-          <a href="#">{{ task.name }}
-            <v-btn class="edit"  v-on:click="dialogEditTask(task.id)">
+        <li v-for="task in listTasks" :key="task.getId()">
+          <a href="#">{{ task.getName() }}
+            <v-btn class="edit"  v-on:click="dialogEditTask(task.getId())">
               <v-icon dark style="color: tomato">
                 mdi-pencil
               </v-icon>
             </v-btn>
-            <input class="check" type="checkbox" v-on:click="checkTask(task.id)">
+            <input class="check" type="checkbox" v-on:click="checkTask(task)">
           </a>
         </li>
       </ol>
@@ -62,7 +62,7 @@
 <script lang='ts'>
 import { Options, Vue } from "vue-class-component";
 import { JustDoItClient } from "../grpc/JustdoitServiceClientPb";
-import { TaskName } from "../grpc/justdoit_pb";
+import {TaskName, TaskId, Task} from "../grpc/justdoit_pb";
 
 @Options({
   name: "todo",
@@ -72,40 +72,56 @@ export default class HelloWorld extends Vue {
   client = new JustDoItClient("https://localhost:5001");
   newTask = "";
   editTask : any;
-  listTasks : any[] = [];
+  listTasks : Task [] = [];
   dialogEdit = false;
 
   async addTask(newTask: string): Promise<void> {
     let taskName = new TaskName();
     taskName.setName(newTask);
     let response = await this.client.addIssue(taskName, null);
-    this.listTasks.push(response.toObject());
+    this.listTasks.push(response);
     this.newTask = "";
   }
+
+  async removeTask(removeTasks : Task []) {
+    for (let [index, element] of removeTasks.entries()) {
+      if(element.getChecked()){
+        let taskId = new TaskId();
+        taskId.setId(element.getId());
+        let response = await this.client.removeIssue(taskId, null);
+        if (response.getResult()){
+          this.listTasks.splice(index,1);
+        }else {
+          console.log("Delete error");
+        }
+      }
+    }
+  }
+
+  async checkTask(taskCheck: Task){
+    taskCheck.getChecked() ? taskCheck.setChecked(false) : taskCheck.setChecked(true);
+  }
+  
+  
+  
+  
+  
   
   async dialogEditTask(idTask: number){
     this.dialogEdit = true;
     this.listTasks.forEach((element) => {
-      if(element.id == idTask)
+      if(element.getId() == idTask)
         this.editTask = {
-          id : element.id,
-          name : element.name
+          id : element.getId(),
+          name : element.getName()
         };
     });
   }
 
-  async removeTask(){
-    console.log("удаляем");
-  }
-
-  async checkTask(idTask: number){
-    console.log(idTask);
-  }
-
   async updateTask(task:any){
     this.listTasks.forEach((element) => {
-      if(element.id == task.id)
-        element.name = task.name;
+      if(element.getId() == task.id)
+        element.setName(task.name);
       
     });
     this.dialogEdit = false;

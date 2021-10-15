@@ -1,11 +1,20 @@
 ﻿syntax = "proto3";
 
-option csharp_namespace = "BackendVue";
+option csharp_namespace = "FrontendVue";
 
 package justdoit;
 
 service JustDoIt {
   rpc AddIssue  (TaskName) returns (Task);
+  rpc RemoveIssue (TaskId) returns (Result);
+}
+
+message TaskId {
+  int32 id = 1;
+}
+
+message Result {
+  bool result = 1;
 }
 
 message TaskName {
