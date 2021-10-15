@@ -115,5 +115,45 @@ export class JustDoItClient {
     this.methodInfoRemoveIssue);
   }
 
+  methodInfoUpdateIssue = new grpcWeb.AbstractClientBase.MethodInfo(
+    justdoit_pb.Result,
+    (request: justdoit_pb.Task) => {
+      return request.serializeBinary();
+    },
+    justdoit_pb.Result.deserializeBinary
+  );
+
+  updateIssue(
+    request: justdoit_pb.Task,
+    metadata: grpcWeb.Metadata | null): Promise<justdoit_pb.Result>;
+
+  updateIssue(
+    request: justdoit_pb.Task,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.Error,
+               response: justdoit_pb.Result) => void): grpcWeb.ClientReadableStream<justdoit_pb.Result>;
+
+  updateIssue(
+    request: justdoit_pb.Task,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.Error,
+               response: justdoit_pb.Result) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/justdoit.JustDoIt/UpdateIssue',
+        request,
+        metadata || {},
+        this.methodInfoUpdateIssue,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/justdoit.JustDoIt/UpdateIssue',
+    request,
+    metadata || {},
+    this.methodInfoUpdateIssue);
+  }
+
 }
 

@@ -101,13 +101,8 @@ export default class HelloWorld extends Vue {
   async checkTask(taskCheck: Task){
     taskCheck.getChecked() ? taskCheck.setChecked(false) : taskCheck.setChecked(true);
   }
-  
-  
-  
-  
-  
-  
-  async dialogEditTask(idTask: number){
+
+  dialogEditTask(idTask: number){
     this.dialogEdit = true;
     this.listTasks.forEach((element) => {
       if(element.getId() == idTask)
@@ -117,14 +112,21 @@ export default class HelloWorld extends Vue {
         };
     });
   }
-
+  
   async updateTask(task:any){
-    this.listTasks.forEach((element) => {
-      if(element.getId() == task.id)
-        element.setName(task.name);
-      
-    });
-    this.dialogEdit = false;
+    let updatingTask = new Task();
+    updatingTask.setId(task.id);
+    updatingTask.setName(task.name);
+    let response = await this.client.updateIssue(updatingTask, null);
+    if (response.getResult()){
+      this.listTasks.forEach((element) => {
+        if(element.getId() == task.id)
+          element.setName(task.name);
+      });
+      this.dialogEdit = false;
+    }else {
+      console.log("Update error");
+    }
   }
 }
 </script>
