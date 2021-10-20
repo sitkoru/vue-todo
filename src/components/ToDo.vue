@@ -7,7 +7,7 @@
       <v-row class="text-center">
         <v-col class="mb-5" cols="12">
           <h2 class="headline font-weight-bold mb-5" style="color: tomato;">Just Do It</h2>
-          <v-btn class="remove"  v-on:click="removeTask(listTasks)">
+          <v-btn class="remove"  v-on:click="removeTasks(removeTasksList)">
             <v-icon dark style="color: tomato">
               mdi-delete
             </v-icon>
@@ -73,36 +73,55 @@ export default class HelloWorld extends Vue {
   newTask = "";
   editTask : any;
   listTasks : Task [] = [];
+  removeTasksList: number [] = [];
   dialogEdit = false;
 
   async addTask(newTask: string): Promise<void> {
-    let taskName = new TaskName();
-    taskName.setName(newTask);
-    let response = await this.client.addIssue(taskName, null);
-    this.listTasks.push(response);
-    this.newTask = "";
+    if(newTask != ""){
+      let taskName = new TaskName();
+      taskName.setName(newTask);
+      let response = await this.client.addIssue(taskName, null);
+      this.listTasks.push(response);
+      this.newTask = "";
+    }
   }
-
-  async removeTask(removeTasks : Task []) {
-    for (let [index, element] of removeTasks.entries()) {
-      if(element.getChecked()){
+  
+  async removeTask(id: number) {
+    for (let element of this.listTasks) {
+      if(element.getChecked()) {
         let taskId = new TaskId();
         taskId.setId(element.getId());
         let response = await this.client.removeIssue(taskId, null);
-        if (response.getResult()){
-          this.listTasks.splice(index,1);
-        }else {
-          console.log("Delete error");
+        if (response.getResult()) {
+          let activeIndex = this.listTasks.findIndex(d => d.getId() === id);
+          this.listTasks.splice(activeIndex,1);
         }
       }
     }
   }
 
-  async checkTask(taskCheck: Task){
-    taskCheck.getChecked() ? taskCheck.setChecked(false) : taskCheck.setChecked(true);
+  async removeTasks(removeTasks : number []) {
+    for (let element of removeTasks) {
+      this.removeTask(element);
+    }
+    this.removeTasksList = [];
   }
 
-  dialogEditTask(idTask: number){
+  async checkTask(taskCheck: Task){
+    taskCheck.getChecked() ? taskCheck.setChecked(false) : taskCheck.setChecked(true);
+    let activeIndex = this.removeTasksList.findIndex(d => d === taskCheck.getId());
+    if(activeIndex != -1){
+      this.removeTasksList.forEach((element, index) => {
+        if(element == taskCheck.getId()){
+          this.removeTasksList.splice(index,1);
+        }
+      });
+    }else{
+      this.removeTasksList.push(taskCheck.getId());
+    }
+  }
+
+  async dialogEditTask(idTask: number){
     this.dialogEdit = true;
     this.listTasks.forEach((element) => {
       if(element.getId() == idTask)
